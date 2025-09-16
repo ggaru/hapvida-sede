@@ -1,0 +1,78 @@
+header{
+    display: flex;
+    margin: 20px 20px 0px 20px;
+    justify-content: space-between;
+    align-items: center;
+}
+.logo{
+    width: 80px;
+}
+.title{
+    font-size: 50px;
+    color:red;   
+}
+.total{ 
+    padding: 10px;
+    background-color: rgb(206, 206, 206);
+}
+
+.inputTitular{
+    display: flex;
+    align-items: center;
+    margin: 20px 20px 0px 20px;
+}
+.inputMes{
+    display: flex;
+    align-items: center;
+    margin: 10px 20px 0px 20px;
+}
+input{
+    
+
+    border: none;
+    font-size: 20px;
+    margin-left: 20px;
+    border-bottom: solid black 1px;
+    padding: 0px 70px 0px 10px;
+    
+}
+.tabela{
+    width: 98%;
+    text-align: left;
+    margin: 10px;
+    font-size: 20px;
+    border-spacing: 10px;
+}
+
+.table-head th{
+    border-bottom: solid 2px rgb(0, 0, 0);
+}
+
+td{
+    border: solid 1px rgb(187, 187, 187);
+    padding: 10px;
+    background-color: rgb(206, 206, 206);
+    
+    
+}
+
+.table-foot td:first-child, .table-foot td:nth-child(2){
+    border: none;
+    border-bottom: solid 2px black;
+    font-weight: bolder;
+    text-align: end;
+    background-color: white;
+}
+.table-foot td:last-child{
+    color:black;
+
+    font-weight: bolder;
+    font-size: 20px;
+    border-bottom: solid 2px black;
+}
+
+.data{
+    font-size: 20px;
+    font-weight: bolder;
+    margin:20px
+}

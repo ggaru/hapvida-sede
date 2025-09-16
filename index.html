@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="/css/reset.css"> </link>
+    <link rel="stylesheet" href="/css/main.css"> </link>
+    
+</head>
+<body>
+    <!-- Cabeçalho -->
+    <header>
+        <img class ="logo" src="/assets/images.png">
+        <h1 class="title"> PLANO DE SAÚDE </h1>
+        <h1 class="total">  </h1>
+    </header>
+
+    <main>
+        <header>
+            <p>Desconto na quantia de R$ [??], referente ao plano de saúde 
+                empresarial, correspondente ao mês de [??].</p>
+        </header>
+        
+        <container class="inputTitular">
+            <h2> Titular: </h2>
+            <input type="text" id="Titular" placeholder="Titular" name = "nome"/>
+        </container>
+        <container class="inputMes">
+            <h2> Mês de refencia:</h2>
+            <p id= "input"></p>
+        </container>    
+   
+        <container  >
+            <table class ="tabela">
+                    <!-- Titulos -->
+                <thead>
+                    <tr class="table-head">
+                        <th>Descrição</th>
+                        <th>Beneficiário</th>
+                        <th>Valor</th>
+                    </tr>
+                </thead>
+                
+                 
+                <tbody class = "tbody">
+                    <tr class ="table-row">
+                        <td> Dependentes</td>
+                        <td id = "dependentes"> </td>
+                        <td id = "valorDep"> </td>
+                    </tr>
+
+                  
+                    <tr class ="table-row">
+                        <td> Coparticipação</td>
+                        <td id="beneficiario"></td>
+                        <td id="valorCop"> </td>
+                    </tr>
+                </tbody>
+                
+                    <tfoot>
+                    <tr class="table-foot">
+                        <td> &nbsp; </td>
+                        <td> Valor Total</td>
+                        <td class="total" > </td>
+                    </tr>
+                    </tfoot>
+            </table>
+        </container>
+
+        <p class="data"> Fortaleza, [??] de [??] de [??] </p>
+
+        <button onclick="consultar()" class="btn-consulta" id="consulta"> Consultar </button>
+    </main>
+
+    <script src="js/main.js"></script>
+</body>
+</html>
