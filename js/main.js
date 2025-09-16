@@ -3,27 +3,116 @@
 const beneficiarios = [
   
   //padrão: nome e coparticipação
-  { nome: "Vinicius",
-    coparticipacao: 100
-  },
+  { nome: "Alexandro Lima",
+    coparticipacao: 0},
+    
+  { nome: "Ana Ligia",
+    coparticipacao: 0},
 
-  //para funcionários com dependentes, um array com um dict de nome e coparticipação de cada dependente.
-  { nome: "Ligia",
-    coparticipacao: 147.23,
-    dependentes: 
-      [{ 
-      nome:"Felipe",
-      mensalidade: 123.23,
-      coparticipacao: 100,
-      }],
-  },
+  { nome: "Ananias Neto",
+    coparticipacao: 0,
+    dependentes:[{
+      nome: "Jade Sophia",
+      mensalidade: 0,
+      coparticipacao: 0,}]},  
+  
+  { nome: "Valdeane",
+    coparticipacao: 0,
+    dependentes:[{
+      nome: "Agatha Valentina",
+      mensalidade: 0,
+      coparticipacao:0,}]},
+    
+  { nome: "Charliane Mariano",
+    coparticipacao: 0},
+  
+  { nome: "Derik Jonathan",
+    coparticipacao: 0},
 
-  { nome: "João de Melo",
-    coparticipacao: 0
-  },
+  { nome: "Dian Kelly",
+    coparticipacao: 0,
+    dependentes: [
+      { nome:"Sarah Vitória",
+        mensalidade: 0,
+        coparticipacao: 0},
+      { nome: "Samuel Victor",
+        mensalidade: 0,
+        coparticipacao:0},]},
+
+  { nome: "Felipe Marques",
+    coparticipacao: 0},
+
+  { nome: "Sousa",
+    coparticipacao: 0},
+
+  { nome: "João Batista",
+    coparticipacao: 20,
+    dependentes: [
+    { nome: "Jucelia Paula",
+      mensalidade: 10,
+      coparticipacao:20.07,},
+    { nome: "Natan de sousa",
+      mensalidade: 10.59,
+      coparticipacao:20.00,},
+    { nome: "Noemi de Sousa",
+      mensalidade: 10,
+      coparticipacao:20,},]},
+  
+  { nome: "João de melo",
+    coparticipacao: 0},    
+  
+  { nome: "José Maria",
+    coparticipacao: 0},    
+  
+  { nome: "Kleber Viana",
+    coparticipacao: 0,
+    dependentes: [
+      { nome:"Kaua Silva",
+        mensalidade: 0,
+        coparticipacao:0},
+      { nome:"Kaleb Silva",
+        mensalidade: 0,
+        coparticipacao:0},]},    
+  
+  { nome: "Marcos Alves",
+    coparticipacao: 0}, 
+  
+  { nome: "Vinicius Pinheiro",
+    coparticipacao:0},  
+
+  { nome: "Mikael Marreiro",
+    coparticipacao:0},  
+
+  { nome: "Wender Vaz",
+    coparticipacao:0,
+    dependentes:[
+      { nome: "Maryana Victoria",
+        mensalidade:0,
+        coparticipacao:0}]},  
+];
+
+const meses = [
+  "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho",
+  "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"
 ];
 
 var total = 0
+
+const dataAtual = new Date()
+const ano = dataAtual.getFullYear();
+const mes = dataAtual.getMonth() + 1;
+const dia = dataAtual.getDate();
+
+const p1 = document.createElement('p');
+p1.textContent = 'Desconto na quantia de R$ '+total+' referente ao plano de saúde empresarial correspondente ao mês de'+ meses[mes].
+const head = document.getElementById('header');
+head.appendChild(p1);
+
+const p = document.createElement('p');
+p.id = 'data';
+p.textContent = 'Fortaleza, ' + dia + ' de ' + meses[mes] + ' de ' + ano;
+const container = document.getElementById('container-table');
+container.appendChild(p);
 
 //função que se inicia após o botão Consultar ser pressionado
 function consultar(){
@@ -54,21 +143,21 @@ function consultar(){
 //função que retornará os dependentes do titular
 function getDep(titular){
   //verificando se o beneficiario realmente tem dependentes
-  
-
   if (titular.dependentes != undefined){
     //caso tenha, sonda por cada dependente dele
     for(var j = 0; j< titular.dependentes.length; j++){
       //armazenando o nome e o valor de mensalidade de cada dependente
       const dependente = titular.dependentes[j]
       //muda no html o nome e o valor da tabela
-      addLines("Dependente", dependente.nome, dependente.mensalidade)
-      total += dependente.mensalidade
-
+      if (dependente.mensalidade > 0){
+        addLines("Dependente", dependente.nome, dependente.mensalidade)
+        total += dependente.mensalidade
+      }
       //verifica se aquele dependente possui coparticipação
-      if (dependente.coparticipacao != 0){
+      if (dependente.coparticipacao > 0){
       //se possuir, chama a função
-          getCop(dependente)
+
+        getCop(dependente)
       }
 
     }
@@ -77,18 +166,18 @@ function getDep(titular){
   
 //função que buscará pela coparticipação
 function getCop(beneficiario){
+  if (beneficiario.coparticipacao >0){
    addLines("Coparticipação", beneficiario.nome, beneficiario.coparticipacao)
    total += beneficiario.coparticipacao
+  }
 }
 
 
 
 function getTotal(total){
     item =document.getElementsByClassName("total")
-    item[0].innerHTML = total
-    item[1].innerHTML = total
-        
-
+    item[0].innerHTML = 'R$ ' + total
+    item[1].innerHTML = 'R$ ' + total
 }
 
 
