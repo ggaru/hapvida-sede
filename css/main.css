@@ -26,7 +26,7 @@ header{
     align-items: center;
     margin: 10px 20px 0px 20px;
 }
-input{
+input, #mes{
     
 
     border: none;
@@ -51,9 +51,7 @@ input{
 td{
     border: solid 1px rgb(187, 187, 187);
     padding: 10px;
-    background-color: rgb(206, 206, 206);
-    
-    
+    background-color: rgb(206, 206, 206);    
 }
 
 .table-foot td:first-child, .table-foot td:nth-child(2){
@@ -76,3 +74,18 @@ td{
     font-weight: bolder;
     margin:20px
 }
+
+#totals td{
+    color:red;
+    margin-bottom: 10px;
+    padding-bottom: 10px;
+    font-size: 16px;
+    border: none;
+    background-color: white;
+    color:black;
+    font-weight: normal;
+} 
+#totals td:nth-child(2){
+    color:red;
+    text-align: end;
+} 

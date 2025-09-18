@@ -7,21 +7,21 @@ const beneficiarios = [
     coparticipacao: 0},
     
   { nome: "Ana Ligia",
-    coparticipacao: 0},
+    coparticipacao: 166.90},
 
   { nome: "Ananias Neto",
     coparticipacao: 0,
     dependentes:[{
       nome: "Jade Sophia",
-      mensalidade: 0,
+      mensalidade: 144.96,
       coparticipacao: 0,}]},  
   
   { nome: "Valdeane",
     coparticipacao: 0,
     dependentes:[{
       nome: "Agatha Valentina",
-      mensalidade: 0,
-      coparticipacao:0,}]},
+      mensalidade: 144.96,
+      coparticipacao:23.20,}]},
     
   { nome: "Charliane Mariano",
     coparticipacao: 0},
@@ -33,10 +33,10 @@ const beneficiarios = [
     coparticipacao: 0,
     dependentes: [
       { nome:"Sarah Vitória",
-        mensalidade: 0,
+        mensalidade: 144.96,
         coparticipacao: 0},
       { nome: "Samuel Victor",
-        mensalidade: 0,
+        mensalidade: 144.96,
         coparticipacao:0},]},
 
   { nome: "Felipe Marques",
@@ -46,17 +46,17 @@ const beneficiarios = [
     coparticipacao: 0},
 
   { nome: "João Batista",
-    coparticipacao: 20,
+    coparticipacao: 0,
     dependentes: [
     { nome: "Jucelia Paula",
-      mensalidade: 10,
-      coparticipacao:20.07,},
+      mensalidade: 337.09,
+      coparticipacao:0,},
     { nome: "Natan de sousa",
-      mensalidade: 10.59,
-      coparticipacao:20.00,},
+      mensalidade: 160.67,
+      coparticipacao:44.45,},
     { nome: "Noemi de Sousa",
-      mensalidade: 10,
-      coparticipacao:20,},]},
+      mensalidade: 160.67,
+      coparticipacao:0,},]},
   
   { nome: "João de melo",
     coparticipacao: 0},    
@@ -65,58 +65,67 @@ const beneficiarios = [
     coparticipacao: 0},    
   
   { nome: "Kleber Viana",
-    coparticipacao: 0,
+    coparticipacao: 23.20,
     dependentes: [
       { nome:"Kaua Silva",
-        mensalidade: 0,
-        coparticipacao:0},
+        mensalidade: 144.96,
+        coparticipacao:23.20},
       { nome:"Kaleb Silva",
-        mensalidade: 0,
-        coparticipacao:0},]},    
+        mensalidade: 144.96,
+        coparticipacao:37.40},]},    
   
   { nome: "Marcos Alves",
-    coparticipacao: 0}, 
+    coparticipacao: 39.73}, 
   
   { nome: "Vinicius Pinheiro",
-    coparticipacao:0},  
+    coparticipacao:23.20},  
 
   { nome: "Mikael Marreiro",
-    coparticipacao:0},  
+    coparticipacao:21.25},  
 
   { nome: "Wender Vaz",
     coparticipacao:0,
     dependentes:[
       { nome: "Maryana Victoria",
-        mensalidade:0,
-        coparticipacao:0}]},  
+        mensalidade:160.67,
+        coparticipacao:23.20}]},  
 ];
 
 const meses = [
   "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho",
   "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"
 ];
-
 var total = 0
+var valorMen = 0;
+var valorCop = 0;
 
-const dataAtual = new Date()
-const ano = dataAtual.getFullYear();
-const mes = dataAtual.getMonth() + 1;
-const dia = dataAtual.getDate();
+function formatarDados(){
 
-const p1 = document.createElement('p');
-p1.textContent = 'Desconto na quantia de R$ '+total+' referente ao plano de saúde empresarial correspondente ao mês de'+ meses[mes].
-const head = document.getElementById('header');
-head.appendChild(p1);
+  const dataAtual = new Date()
+  const ano = dataAtual.getFullYear();
+  const mes = dataAtual.getMonth() + 1;
+  const dia = dataAtual.getDate();
 
-const p = document.createElement('p');
-p.id = 'data';
-p.textContent = 'Fortaleza, ' + dia + ' de ' + meses[mes] + ' de ' + ano;
-const container = document.getElementById('container-table');
-container.appendChild(p);
-
+  const head = document.getElementById('header');
+  const p1 = document.getElementById('text') || document.createElement('p');
+  p1.id = "text"
+  p1.textContent = 'Desconto na quantia de R$ '+total+' referente ao plano de saúde empresarial correspondente ao mês de '+ meses[mes]+".";
+ 
+  head.appendChild(p1);
+  document.getElementById('mes').innerHTML = meses[mes]
+  const container = document.getElementById('container-table') ;
+  const p = document.getElementById('data') || document.createElement('p');
+  p.id = 'data';
+  p.textContent = 'Fortaleza, ' + dia + ' de ' + meses[mes] + ' de ' + ano;
+  
+  container.appendChild(p);
+}
 //função que se inicia após o botão Consultar ser pressionado
 function consultar(){
   total = 0;
+  valorMen= 0;
+  valorCop = 0;
+
   const tbodyExistente = document.querySelector(".tbody");
   if(tbodyExistente) tbodyExistente.remove();
 
@@ -135,11 +144,10 @@ function consultar(){
     }else{
       continue;
     }
-    
   }
+  formatarDados();
 
 }
-
 //função que retornará os dependentes do titular
 function getDep(titular){
   //verificando se o beneficiario realmente tem dependentes
@@ -152,27 +160,32 @@ function getDep(titular){
       if (dependente.mensalidade > 0){
         addLines("Dependente", dependente.nome, dependente.mensalidade)
         total += dependente.mensalidade
+        valorMen += dependente.mensalidade
+        
+        
       }
       //verifica se aquele dependente possui coparticipação
       if (dependente.coparticipacao > 0){
-      //se possuir, chama a função
-
+        //total += dependente.coparticipacao
+        valorCop += dependente.coparticipacao;
         getCop(dependente)
       }
-
+      
     }
+    addTotals(valorMen,"Valor Dependentes");
   }
+
 }
   
 //função que buscará pela coparticipação
 function getCop(beneficiario){
   if (beneficiario.coparticipacao >0){
-   addLines("Coparticipação", beneficiario.nome, beneficiario.coparticipacao)
-   total += beneficiario.coparticipacao
+    addLines("Coparticipação", beneficiario.nome, beneficiario.coparticipacao)
+    total += beneficiario.coparticipacao
+    addTotals(valorCop,"Valor Coparticipação"); 
   }
+  
 }
-
-
 
 function getTotal(total){
     item =document.getElementsByClassName("total")
@@ -180,6 +193,17 @@ function getTotal(total){
     item[1].innerHTML = 'R$ ' + total
 }
 
+function addTotals(valor, desc){
+  const tfoot = document.querySelector("tfoot")
+  const tr = document.createElement("tr")
+  tr.id ="totals";
+  tr.innerHTML=`
+    <td> &nbsp; </td>
+    <td> ${desc} </td>
+    <td> R$ ${valor} </td>
+  `
+  tfoot.insertBefore(tr,tfoot.children[0])
+}
 
 function addLines(descricao, beneficiario, valor) {
     const tbody = document.querySelector(".tbody") || criarTbody(); // cria tbody se não existir
