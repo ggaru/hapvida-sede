@@ -100,16 +100,15 @@ var valorMen = 0;
 var valorCop = 0;
 
 function formatarDados(){
-
   const dataAtual = new Date()
   const ano = dataAtual.getFullYear();
   const mes = dataAtual.getMonth() + 1;
-  const dia = dataAtual.getDate();
+  const dia = dataAtual.getDate();  
 
   const head = document.getElementById('header');
   const p1 = document.getElementById('text') || document.createElement('p');
   p1.id = "text"
-  p1.textContent = 'Desconto na quantia de R$ '+total+' referente ao plano de saúde empresarial correspondente ao mês de '+ meses[mes]+".";
+  p1.textContent = 'Desconto na quantia de R$ '+total.toFixed(2)+' referente ao plano de saúde empresarial correspondente ao mês de '+ meses[mes]+".";
  
   head.appendChild(p1);
   document.getElementById('mes').innerHTML = meses[mes]
@@ -125,7 +124,9 @@ function consultar(){
   total = 0;
   valorMen= 0;
   valorCop = 0;
-
+  const tfootExistente = document.querySelector("tfoot")
+  console.log(tfootExistente)
+  if  (tfootExistente) tfootExistente.remove()
   const tbodyExistente = document.querySelector(".tbody");
   if(tbodyExistente) tbodyExistente.remove();
 
@@ -134,25 +135,26 @@ function consultar(){
   //le todos os beneficiarios do array
   for(var i = 0; i< beneficiarios.length; i++){
     titular = beneficiarios[i]
+    
     //verifica se aquele titular existe, se nao, continua procurando até o fim do array
     if (input == titular.nome){
+      console.log("Titular: "+titular.nome)
       //existindo, chama a função, passando o titular
-      getCop(titular);
-      getDep(titular);
-      getTotal(total);
-      break;
+      if (titular.dependentes){
+        getDep(titular);
+      }
+      getCop(titular)
     }else{
       continue;
     }
   }
   formatarDados();
-
+  addTotal();
+  getTotal(total);  
 }
 //função que retornará os dependentes do titular
 function getDep(titular){
-  //verificando se o beneficiario realmente tem dependentes
-  if (titular.dependentes != undefined){
-    //caso tenha, sonda por cada dependente dele
+    console.log("chamando função getdep")
     for(var j = 0; j< titular.dependentes.length; j++){
       //armazenando o nome e o valor de mensalidade de cada dependente
       const dependente = titular.dependentes[j]
@@ -161,62 +163,77 @@ function getDep(titular){
         addLines("Dependente", dependente.nome, dependente.mensalidade)
         total += dependente.mensalidade
         valorMen += dependente.mensalidade
-        
-        
-      }
-      //verifica se aquele dependente possui coparticipação
-      if (dependente.coparticipacao > 0){
-        //total += dependente.coparticipacao
-        valorCop += dependente.coparticipacao;
-        getCop(dependente)
-      }
-      
+      } 
     }
-    addTotals(valorMen,"Valor Dependentes");
-  }
-
+  addTotals(valorMen,"Valor Dependentes");
 }
-  
 //função que buscará pela coparticipação
 function getCop(beneficiario){
-  if (beneficiario.coparticipacao >0){
-    addLines("Coparticipação", beneficiario.nome, beneficiario.coparticipacao)
+  console.log("chamando função getcop")
+  console.log("Coparticipação: "+ beneficiario.nome +": "+ beneficiario.coparticipacao)
+  if (beneficiario.coparticipacao>0){
     total += beneficiario.coparticipacao
-    addTotals(valorCop,"Valor Coparticipação"); 
+    valorCop += beneficiario.coparticipacao
+    addLines("Coparticipação", beneficiario.nome, beneficiario.coparticipacao)
   }
-  
+  if (beneficiario.dependentes){
+    for (var i = 0; i <beneficiario.dependentes.length; i++){
+      if (beneficiario.dependentes[i].coparticipacao > 0){
+        total += beneficiario.dependentes[i].coparticipacao
+        valorCop += beneficiario.dependentes[i].coparticipacao
+        addLines("Coparticipação", beneficiario.dependentes[i].nome, beneficiario.dependentes[i].coparticipacao)
+      }
+    }
+  }
+  addTotals(valorCop,"Valor Coparticipação"); 
 }
-
 function getTotal(total){
     item =document.getElementsByClassName("total")
-    item[0].innerHTML = 'R$ ' + total
-    item[1].innerHTML = 'R$ ' + total
+    item[0].innerHTML = 'R$ ' + total.toFixed(2)
+    item[1].innerHTML = 'R$ ' + total.toFixed(2)
 }
-
 function addTotals(valor, desc){
-  const tfoot = document.querySelector("tfoot")
-  const tr = document.createElement("tr")
-  tr.id ="totals";
-  tr.innerHTML=`
-    <td> &nbsp; </td>
-    <td> ${desc} </td>
-    <td> R$ ${valor} </td>
-  `
-  tfoot.insertBefore(tr,tfoot.children[0])
+  console.log("chamando função addtotals")
+
+  if (valor > 0){
+    const tfoot = document.querySelector("tfoot") || criarTfoot();
+    const tr = document.createElement("tr")
+    tr.className ="totals";
+    
+    tr.innerHTML=`
+      <td> &nbsp; </td>
+      <td> ${desc} </td>
+      <td> R$ ${valor.toFixed(2)} </td>
+    `
+    tfoot.insertBefore(tr,tfoot.children[0])
+  }
 }
 
 function addLines(descricao, beneficiario, valor) {
     const tbody = document.querySelector(".tbody") || criarTbody(); // cria tbody se não existir
-
     const tr = document.createElement("tr");
     tr.className = "table-row";
-
     tr.innerHTML = `
         <td>${descricao}</td>
         <td>${beneficiario}</td>
-        <td>${valor}</td>
+        <td> R$ ${valor.toFixed(2)}</td>
     `;
     tbody.appendChild(tr);
+}
+
+function addTotal(){
+  console.log("testando classe addTotal")
+  const tfoot = document.querySelector("tfoot")
+  const tr = document.createElement("tr")
+  tr.className ="table-foot";
+  
+  tr.innerHTML=`
+    <td> &nbsp; </td>
+    <td> Valor Total</td>
+    <td class="total" > </td>
+  `
+
+  tfoot.appendChild(tr)
 }
 
 function criarTbody(){
@@ -227,10 +244,10 @@ function criarTbody(){
   return tbody;
 }
 
-
-
-
-
-
-
-
+function criarTfoot(){
+  const tabela = document.querySelector(".tabela")
+  const tfoot = document.createElement("tfoot");
+  tfoot.className = "tfoot";
+  tabela.insertBefore(tfoot, tabela.querySelector("tfoot"))
+  return tfoot;
+}

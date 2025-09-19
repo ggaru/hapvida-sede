@@ -75,7 +75,7 @@ td{
     margin:20px
 }
 
-#totals td{
+.totals td{
     color:red;
     margin-bottom: 10px;
     padding-bottom: 10px;
@@ -85,7 +85,7 @@ td{
     color:black;
     font-weight: normal;
 } 
-#totals td:nth-child(2){
+.totals td:nth-child(2){
     color:red;
     text-align: end;
 } 
