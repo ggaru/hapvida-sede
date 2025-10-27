@@ -102,7 +102,7 @@ var valorCop = 0;
 function formatarDados(){
   const dataAtual = new Date()
   const ano = dataAtual.getFullYear();
-  const mes = dataAtual.getMonth() + 1;
+  const mes = dataAtual.getMonth();
   const dia = dataAtual.getDate();  
 
   const head = document.getElementById('header');
