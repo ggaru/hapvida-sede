@@ -1,94 +1,10 @@
 function consultar(){
   fetch('/files/hapvida.json')
     .then(r => r.json())
-    .then(beneficiarios => {
-      botaoConsulta(beneficiarios)
+    .then(funcionarios => {
+      botaoConsulta(funcionarios)
     })
 }
-/*
-// array de dicionários de cada funcionário
-const beneficiarios = [
-  
-  //padrão: nome e coparticipação
-  { nome: "Alexandro Lima",
-    coparticipacao: 27.40},
-    
-  { nome: "Ana Ligia",
-    coparticipacao: 23.20},
-
-  { nome: "Ananias Neto",
-    coparticipacao: 0,
-    dependentes:[{
-      nome: "Jade Sophia",
-      mensalidade: 144.96,
-      coparticipacao: 45.40,}]},  
-  
-  { nome: "Valdeane",
-    coparticipacao: 0,
-
-  },
-  { nome: "Charliane Mariano",
-    coparticipacao: 0},
-  
-  { nome: "Derik Jonathan",
-    coparticipacao: 0},
-
-  { nome: "Dian Kelly",
-    coparticipacao: 23.20,
-    },
-
-  { nome: "Felipe Marques",
-    coparticipacao: 0},
-
-  { nome: "Sousa",
-    coparticipacao: 0.0},
-
-  { nome: "João Batista",
-    coparticipacao: 0,
-    dependentes: [
-    { nome: "Jucelia Paula",
-      mensalidade: 337.09,
-      coparticipacao:0,},
-    { nome: "Natan de sousa",
-      mensalidade: 160.67,
-      coparticipacao:0,},
-    { nome: "Noemi de Sousa",
-      mensalidade: 160.67,
-      coparticipacao:0,},]},
-  
-  { nome: "João de melo",
-    coparticipacao: 43.44},    
-  
-  { nome: "José Maria",
-    coparticipacao: 0},    
-  
-  { nome: "Kleber Viana",
-    coparticipacao: 0.0,
-    dependentes: [
-      { nome:"Kaua Silva",
-        mensalidade: 144.96,
-        coparticipacao:0},
-      { nome:"Kaleb Silva",
-        mensalidade: 144.96,
-        coparticipacao:0},]},    
-  
-  { nome: "Marcos Alves",
-    coparticipacao: 65.64}, 
-  
-  { nome: "Vinicius Pinheiro",
-    coparticipacao:0.0},  
-
-  { nome: "Mikael Marreiro",
-    coparticipacao:0},  
-
-  { nome: "Wender Vaz",
-    coparticipacao:0.0,
-    dependentes:[
-      { nome: "Maryana Victoria",
-        mensalidade:160.67,
-        coparticipacao:22.20}]},  
-];
-*/
 
 const meses = [
   "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho",
@@ -119,7 +35,7 @@ function formatarDados(){
   container.appendChild(p);
 }
 //função que se inicia após o botão Consultar ser pressionado
-function botaoConsulta(beneficiarios){
+function botaoConsulta(funcionarios){
   total = 0;
   valorMen= 0;
   valorCop = 0;
@@ -131,29 +47,52 @@ function botaoConsulta(beneficiarios){
 
   // le o valor recebido na linha titular
   const input = document.getElementById("Titular").value;
-  //le todos os beneficiarios do array
-  console.log("CHEGOU NO FOR")
-  for(var i = 0; i< length; i++){
-    console.log(i)
-    titular = beneficiarios[i]
+
+  for(var i = 0; i< funcionarios.length; i++){
+
+    titular = funcionarios[i]
    
+
     //verifica se aquele titular existe, se nao, continua procurando até o fim do array
     if (input == titular["NOME"]){
-      console.log("teste")
-      console.log("Titular: "+titular.nome)
+
       //existindo, chama a função, passando o titular
-      if (titular.dependentes){
+      const dependentes = procuraDependente(titular, funcionarios);
+      console.log(dependentes)
+      if (dependentes.length > 0) {
+        titular.dependentes = dependentes; // cria a chave AQUI
         getDep(titular);
-      }
-      getCop(titular)
-    }else{
+      }else{
       continue;
     }
   }
+}
   formatarDados();
   addTotal();
   getTotal(total);  
 }
+
+function procuraDependente(titular, funcionarios) {
+  const dependentes = [];
+
+  for (let i = 0; i < funcionarios.length; i++) {
+    const f = funcionarios[i];
+
+    if (
+      f["TITULAR"] === titular["NOME"] &&
+      f["NOME"] !== titular["NOME"]
+    ) {
+      dependentes.push({
+        nome: f["NOME"],
+        mensalidade: f["MENSALIDADE"],
+        coparticipacao: f["COPARTICIPAÇÃO"] || 0
+      });
+    }
+  }
+
+  return dependentes;
+}
+
 //função que retornará os dependentes do titular
 function getDep(titular){
     console.log("chamando função getdep")
@@ -170,14 +109,13 @@ function getDep(titular){
   addTotals(valorMen,"Valor Dependentes");
 }
 //função que buscará pela coparticipação
-function getCop(beneficiario){
-  console.log("chamando função getcop")
-  console.log("Coparticipação: "+ beneficiario.nome +": "+ beneficiario.coparticipacao)
-  if (beneficiario.coparticipacao>0){
-    total += beneficiario.coparticipacao
-    valorCop += beneficiario.coparticipacao
-    addLines("Coparticipação", beneficiario.nome, beneficiario.coparticipacao)
+function getCop(titular){
+  if (titular["COPARTICIPAÇÃO"]>0){
+    total += titular["COPARTICIPAÇÃO"]
+    valorCop += titular["COPARTICIPAÇÃO"]
+    addLines("Coparticipação", titular["NOME"], titular["COPARTICIPAÇÃO"])
   }
+  
   if (beneficiario.dependentes){
     for (var i = 0; i <beneficiario.dependentes.length; i++){
       if (beneficiario.dependentes[i].coparticipacao > 0){
