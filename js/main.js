@@ -1,28 +1,32 @@
-
+function consultar(){
+  fetch('/files/hapvida.json')
+    .then(r => r.json())
+    .then(beneficiarios => {
+      botaoConsulta(beneficiarios)
+    })
+}
+/*
 // array de dicionários de cada funcionário
 const beneficiarios = [
   
   //padrão: nome e coparticipação
   { nome: "Alexandro Lima",
-    coparticipacao: 0},
+    coparticipacao: 27.40},
     
   { nome: "Ana Ligia",
-    coparticipacao: 166.90},
+    coparticipacao: 23.20},
 
   { nome: "Ananias Neto",
     coparticipacao: 0,
     dependentes:[{
       nome: "Jade Sophia",
       mensalidade: 144.96,
-      coparticipacao: 0,}]},  
+      coparticipacao: 45.40,}]},  
   
   { nome: "Valdeane",
     coparticipacao: 0,
-    dependentes:[{
-      nome: "Agatha Valentina",
-      mensalidade: 144.96,
-      coparticipacao:23.20,}]},
-    
+
+  },
   { nome: "Charliane Mariano",
     coparticipacao: 0},
   
@@ -30,20 +34,14 @@ const beneficiarios = [
     coparticipacao: 0},
 
   { nome: "Dian Kelly",
-    coparticipacao: 0,
-    dependentes: [
-      { nome:"Sarah Vitória",
-        mensalidade: 144.96,
-        coparticipacao: 0},
-      { nome: "Samuel Victor",
-        mensalidade: 144.96,
-        coparticipacao:0},]},
+    coparticipacao: 23.20,
+    },
 
   { nome: "Felipe Marques",
     coparticipacao: 0},
 
   { nome: "Sousa",
-    coparticipacao: 0},
+    coparticipacao: 0.0},
 
   { nome: "João Batista",
     coparticipacao: 0,
@@ -53,43 +51,44 @@ const beneficiarios = [
       coparticipacao:0,},
     { nome: "Natan de sousa",
       mensalidade: 160.67,
-      coparticipacao:44.45,},
+      coparticipacao:0,},
     { nome: "Noemi de Sousa",
       mensalidade: 160.67,
       coparticipacao:0,},]},
   
   { nome: "João de melo",
-    coparticipacao: 0},    
+    coparticipacao: 43.44},    
   
   { nome: "José Maria",
     coparticipacao: 0},    
   
   { nome: "Kleber Viana",
-    coparticipacao: 23.20,
+    coparticipacao: 0.0,
     dependentes: [
       { nome:"Kaua Silva",
         mensalidade: 144.96,
-        coparticipacao:23.20},
+        coparticipacao:0},
       { nome:"Kaleb Silva",
         mensalidade: 144.96,
-        coparticipacao:37.40},]},    
+        coparticipacao:0},]},    
   
   { nome: "Marcos Alves",
-    coparticipacao: 39.73}, 
+    coparticipacao: 65.64}, 
   
   { nome: "Vinicius Pinheiro",
-    coparticipacao:23.20},  
+    coparticipacao:0.0},  
 
   { nome: "Mikael Marreiro",
-    coparticipacao:21.25},  
+    coparticipacao:0},  
 
   { nome: "Wender Vaz",
-    coparticipacao:0,
+    coparticipacao:0.0,
     dependentes:[
       { nome: "Maryana Victoria",
         mensalidade:160.67,
-        coparticipacao:23.20}]},  
+        coparticipacao:22.20}]},  
 ];
+*/
 
 const meses = [
   "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho",
@@ -120,12 +119,12 @@ function formatarDados(){
   container.appendChild(p);
 }
 //função que se inicia após o botão Consultar ser pressionado
-function consultar(){
+function botaoConsulta(beneficiarios){
   total = 0;
   valorMen= 0;
   valorCop = 0;
+
   const tfootExistente = document.querySelector("tfoot")
-  console.log(tfootExistente)
   if  (tfootExistente) tfootExistente.remove()
   const tbodyExistente = document.querySelector(".tbody");
   if(tbodyExistente) tbodyExistente.remove();
@@ -133,11 +132,14 @@ function consultar(){
   // le o valor recebido na linha titular
   const input = document.getElementById("Titular").value;
   //le todos os beneficiarios do array
-  for(var i = 0; i< beneficiarios.length; i++){
+  console.log("CHEGOU NO FOR")
+  for(var i = 0; i< length; i++){
+    console.log(i)
     titular = beneficiarios[i]
-    
+   
     //verifica se aquele titular existe, se nao, continua procurando até o fim do array
-    if (input == titular.nome){
+    if (input == titular["NOME"]){
+      console.log("teste")
       console.log("Titular: "+titular.nome)
       //existindo, chama a função, passando o titular
       if (titular.dependentes){
@@ -222,7 +224,6 @@ function addLines(descricao, beneficiario, valor) {
 }
 
 function addTotal(){
-  console.log("testando classe addTotal")
   const tfoot = document.querySelector("tfoot")
   const tr = document.createElement("tr")
   tr.className ="table-foot";
